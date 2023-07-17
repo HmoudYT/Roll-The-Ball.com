@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Website</title>
+  <style>
+    /* CSS for centering the ball */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      perspective: 800px;
+      background-color: #000000; /* Set background color to black */
+      background-image: url('space.jpg'); /* Replace 'space.jpg' with the actual image file */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .ball {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: red;
+      transform: rotateX(45deg) rotateY(45deg);
+      animation-name: rotateBall;
+      animation-duration: 2s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes rotateBall {
+      0% {
+        transform: rotateX(45deg) rotateY(45deg);
+      }
+      50% {
+        transform: rotateX(225deg) rotateY(225deg);
+      }
+      100% {
+        transform: rotateX(405deg) rotateY(405deg);
+      }
+    }
+
+    .button-container {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+    }
+
+    .score-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 32px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .score-text {
+      margin-bottom: 5px;
+    }
+
+    .score-number,
+    .high-score {
+      font-size: inherit;
+    }
+
+    .high-score {
+      color: lightgray;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="ball"></div>
+  </header>
+
+  <div class="button-container">
+    <button onmousedown="rotateBall()" onmouseup="stopRotateBall()">Roll The Ball</button>
+  </div>
+
+  <div id="score" class="score-container">
+    <span class="score-text">Score:</span>
+    <span class="score-number">0</span>
+    <span class="high-score">High Score: 0</span>
+  </div>
+
+  <script>
+    var ball = document.querySelector('.ball');
+    var rotationInterval;
+    var score = 0;
+    var highScore = localStorage.getItem('highScore') || 0;
+
+    updateHighScore();
+
+    function rotateBall() {
+      ball.style.animationPlayState = 'running';
+      rotationInterval = setInterval(function() {
+        ball.style.transform = 'rotateX(' + getRandomRotation() + 'deg) rotateY(' + getRandomRotation() + 'deg)';
+      }, 200);
+    }
+
+    function stopRotateBall() {
+      ball.style.animationPlayState = 'paused';
+      clearInterval(rotationInterval);
+      score++;
+      document.querySelector('.score-number').textContent = score;
+      updateHighScore();
+    }
+
+    function getRandomRotation() {
+      return Math.floor(Math.random() * 360);
+    }
+
+    function updateHighScore() {
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+      }
+      document.querySelector('.high-score').textContent = 'High Score: ' + highScore;
+    }
+  </script>
+</body>
+</html>
